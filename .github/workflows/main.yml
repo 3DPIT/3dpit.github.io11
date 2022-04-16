@@ -1,39 +1,28 @@
-name: typed-blog-deploy
-
+name: Build and Deploy
 on:
   push:
-    branches: [main]
-
+    branches: master
 jobs:
-  deploy:
+  build-and-deploy:
+    name: Build and deploy Gatsby site
     runs-on: ubuntu-latest
-
     steps:
-      # https://github.com/marketplace/actions/checkout
-      - name: 🧑🏻‍💻 checkout source code
-        uses: actions/checkout@v2.3.4
-
-      # https://github.com/marketplace/actions/setup-node-js-environment
-      - name: 😎 Setup Node
-        uses: actions/setup-node@v2.1.2
+      - name: Checkout Code
+        uses: actions/checkout@v2.3.1
+      
+      - name: Install Node.js
+        uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
-
-      # https://github.com/marketplace/actions/yarn-install-cache
-      - name: 🚀 yarn cache
-        uses: c-hive/gha-yarn-cache@v2
-
-      - name: 🕸 install dependencies on ubuntu
-        run: yarn install
-
-      - name: 🏢 build
-        run: yarn build
-
-      - name: 👊🏻 deploy
-        uses: Cecilapp/GitHub-Pages-deploy@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          email: hello@business-canvas.com
-          build_dir: public
-          branch: master
+          node-version: '13.x'
+      
+      - name: Install Project Dependencies
+        run: npm ci
+      
+      - name: Install Gatsby CLI
+        run: npm install -g gatsby-cli@2.12.34
+      
+      - name: Build
+        run: gatsby build
+      
+      - name: npm deploy
+        run: npm run deploy
