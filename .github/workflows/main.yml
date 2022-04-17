@@ -1,25 +1,31 @@
-name: Build and Deploy
+name: gatsby deploy
+
 on:
   push:
-    branches: main
+    branches: [main]
+
 jobs:
-  build-and-deploy:
-    name: Build and deploy Gatsby site
+  deploy:
+    name: deploy
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2.3.1
-      
-      - name: Install Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '13.x'
-      
-      - name: Install Project Dependencies
-        run: npm ci
-      
-      - name: Install Gatsby CLI
-        run: npm install -g gatsby-cli@2.12.34
-      
-      - name: npm deploy
-        run: npm run deploy
+      - name: checkout code
+        uses: actions/checkout@v2
+
+      - name: packages install
+        run: yarn install
+
+      - name: gatsby build
+        run: yarn build
+        env:
+          # API_KEY 에는 자신이 secret을 생성할 때 설정한 이름으로 넣어야 한다
+          GH_API_KEY: ${{ secrets.gatsby }}
+
+      - name: deploy
+        uses: maxheld83/ghpages@v0.2.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # API_KEY 에는 자신이 secret을 생성할 때 설정한 이름으로 넣어야 한다
+          GH_PAT: ${{ secrets.gatsby }}
+          BUILD_DIR: 'public/'
