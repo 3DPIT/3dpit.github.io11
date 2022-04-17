@@ -15,11 +15,6 @@ jobs:
 
       - name: packages install
         run: yarn install
-
-      - name: gatsby build
-        run: yarn build
-        env:
-          GH_API_KEY: ${{ secrets.GATSBY }}
           
       - name: CNAME copy
         run: cp CNAME public/
