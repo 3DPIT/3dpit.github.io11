@@ -15,9 +15,6 @@ jobs:
 
       - name: packages install
         run: yarn install
-          
-      - name: CNAME copy
-        run: cp CNAME public/
 
       - name: deploy
         uses: maxheld83/ghpages@v0.2.1
